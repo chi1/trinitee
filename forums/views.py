@@ -67,7 +67,7 @@ def index(request):
 		
 	tracker = ObjectTracker(request.session)
 	for topic in topics:
-		topic.has_new_posts = not tracker.has_viewed(topic.last_post, 'last_post__created_at') \
+		topic.has_new_posts = not tracker.has_viewed(topic.last_post, 'created_at') \
 		if topic.last_post else False
 	
 	return {'forums': forums, 'users_online': users_online,

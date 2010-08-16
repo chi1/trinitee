@@ -225,6 +225,7 @@ def post_post_save(instance, **kwargs):
 		cache.delete('homepage_journal')
 	cache.delete('forums_topics_%s' % forum.id)
 	cache.delete('forums_posts_%s' % topic.id)
+	cache.delete('forums_latest_topics')
 
 
 def post_topic_save(instance, **kwargs):
