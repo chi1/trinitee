@@ -12,13 +12,6 @@
 			<th>Post count</th>
 			<th>Last Post</th>
 		</tr>
-		{% for c in categories %}
-		<tr>
-			<td colspan="4">
-				<b>{{ c.category.name }}</b>
-				<p>{{ c.category.description }}</p>
-			</td>
-		</tr>
 		{% for f in c.forums %}
 		<tr>
 			<td>

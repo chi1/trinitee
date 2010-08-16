@@ -13,7 +13,7 @@ from haystack.views import SearchView
 from forums.forms import (PostForm, DeletePostForm, TopicForm,
 	DeleteTopicForm, MoveTopicForm, ReportPostForm, SplitPostsForm,
 	PostSearchForm)
-from forums.models import Category, Forum, Topic, Post, PostKarma, Report
+from forums.models import Forum, Topic, Post, PostKarma, Report
 from utilities.annoying.decorators import render_to
 from utilities.annoying.functions import get_config, get_object_or_None
 from utilities.internal.decorators import user_passes_test_or_403
@@ -31,33 +31,6 @@ def index(request):
 		cache.set('forums_users_online', users_online)
 
 	tracker = ObjectTracker(request.session)
-	categories = cache.get('forums_categories_%s' % request.user.id
-		if request.user.is_authenticated() else 'anon')
-
-	if categories == None:
-		#forums = list(Forum.objects.all(). \
-		#	select_related('category', 'last_post__topic', 'last_post__author'))
-		forums = list(Forum.objects.annotate(num_can_read=Count('can_read')). \
-			select_related('category', 'last_post__topic', 'last_post__author'))
-		forums = [i for i in forums
-			if can_access_forum(request, i, return_plain_boolean=True)]
-		categories = {}
-		for forum in forums:
-			cat = categories.setdefault(forum.category.id,
-				{'id': forum.category.id, 'category': forum.category, 'forums': []})
-			cat['forums'].append(forum)
-		cmpdef = lambda a, b: cmp(a['category'].order, b['category'].order)
-		categories = sorted(categories.values(), cmpdef)
-		cache.set('forums_categories_%s' % request.user.id
-			if request.user.is_authenticated() else 'anon', categories)
-
-	# UGLY
-	for category in categories:
-		for forum in category['forums']:
-			forum.has_new_posts = not tracker.has_viewed(forum.last_post, 'created_at') \
-				if forum.last_post else False
-			forum.has_new_topics = not tracker.has_viewed(forum.last_topic, 'created_at') \
-				if forum.last_topic else False
 
 	posts = cache.get('forums_count_posts')
 	if posts == None:
@@ -74,7 +47,7 @@ def index(request):
 		users = User.objects.exclude(is_active=False).count()
 		cache.set('forums_count_users', users)
 
-	return {'categories': categories, 'users_online': users_online,
+	return {'users_online': users_online,
 			'posts': posts, 'topics': topics, 'users': users}
 
 
