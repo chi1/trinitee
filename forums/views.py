@@ -31,7 +31,19 @@ def index(request):
 		cache.set('forums_users_online', users_online)
 
 	tracker = ObjectTracker(request.session)
+	
+	forums = list(Forum.objects.annotate(num_can_read=Count('can_read')). \
+		select_related('forums', 'last_post__topic', 'last_post__author'))
+	forums = [i for i in forums
+		if can_access_forum(request, i, return_plain_boolean=True)]
 
+	for forum in forums:
+		forum.has_new_posts = not tracker.has_viewed(forum.last_post, 'created_at') \
+			if forum.last_post else False
+		forum.has_new_topics = not tracker.has_viewed(forum.last_topic, 'created_at') \
+			if forum.last_topic else False
+			
+	
 	posts = cache.get('forums_count_posts')
 	if posts == None:
 		posts = Post.objects.count()
@@ -46,8 +58,19 @@ def index(request):
 	if users == None:
 		users = User.objects.exclude(is_active=False).count()
 		cache.set('forums_count_users', users)
+	
 
-	return {'users_online': users_online,
+	topics = cache.get('forums_latest_topics')
+	if topics == None:
+		topics = list(Topic.objects.order_by('-is_sticky', '-last_post__created_at').select_related('author', 'last_post__author'))
+		cache.set('forums_latest_topics', topics)
+		
+	tracker = ObjectTracker(request.session)
+	for topic in topics:
+		topic.has_new_posts = not tracker.has_viewed(topic.last_post, 'last_post__created_at') \
+		if topic.last_post else False
+	
+	return {'forums': forums, 'users_online': users_online,
 			'posts': posts, 'topics': topics, 'users': users}
 
 
