@@ -80,10 +80,6 @@ class CustomIndexDashboard(Dashboard):
 			title=_('Quick actions'),
 			children=[
 				{
-					'title': _('Add forum category'),
-					'url': reverse('admin:forums_forum_add'),
-				},
-				{
 					'title': _('Add new Teeworlds version'),
 					'url': reverse('admin:downloads_version_add'),
 				},

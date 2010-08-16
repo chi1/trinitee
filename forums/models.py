@@ -130,7 +130,6 @@ class Topic(models.Model):
 class Forum(OrderedModel):
 	name = models.CharField(max_length=100, unique=True)
 	description = models.TextField(blank=True)
-	category = models.ForeignKey('Category')
 	can_read = models.ManyToManyField('accounts.Group', blank=True,
 		related_name='forum_can_read')
 	can_post_topic = models.ManyToManyField('accounts.Group', blank=True,
@@ -144,7 +143,7 @@ class Forum(OrderedModel):
 		blank=True, null=True)
 
 	class Meta:
-		ordering = ['category', 'order', 'name']
+		ordering = ['order', 'name']
 		verbose_name_plural = ('Forums')
 
 	def __unicode__(self):
@@ -167,18 +166,6 @@ class Forum(OrderedModel):
 			return Post.objects.filter(topic__forum=self).latest()
 		except Post.DoesNotExist:
 			return None
-
-
-class Category(OrderedModel):
-	name = models.CharField(max_length=100)
-	description = models.TextField(blank=True)
-
-	class Meta:
-		ordering = ['order', 'name']
-		verbose_name_plural = ('Categories')
-
-	def __unicode__(self):
-		return self.name
 
 
 class PostKarma(models.Model):

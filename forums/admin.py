@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.forms.models import BaseInlineFormSet
-from forums.models import Category, Forum, Topic, Post, Report
+from forums.models import Forum, Topic, Post, Report
 from utilities.internal.templatetags.truncate import truncate
 from utilities.internal.widgets import NullBooleanROWidget, PostPreviewWidget
 
@@ -23,14 +23,8 @@ class ForumInline(admin.TabularInline):
 	exclude = ('description', 'last_post', 'post_count', 'topic_count')
 
 
-class CategoryAdmin(admin.ModelAdmin):
-	list_display = ('order_link', 'name')
-	list_display_links = ('name', )
-	inlines = [ForumInline]
-
-
 class ForumAdmin(admin.ModelAdmin):
-	list_display = ('category', 'order_link', 'name')
+	list_display = ('order_link', 'name')
 	list_display_links = ('name', )
 	exclude = ('last_post', 'post_count', 'topic_count')
 
@@ -162,7 +156,6 @@ class ReportAdmin(admin.ModelAdmin):
 	truncated_content.short_description = 'Report content'
 
 
-admin.site.register(Category, CategoryAdmin)
 admin.site.register(Forum, ForumAdmin)
 admin.site.register(Topic, TopicAdmin)
 admin.site.register(Report, ReportAdmin)
