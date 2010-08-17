@@ -6,7 +6,7 @@
 	<link rel="alternate" type="application/atom+xml" href="{% url feed_forums_index %}" title="{{ settings.SITE_NAME }} Forum" />
 {% endblock header %}
 {% block content %}
-	<table cellspacing="5" cellpadding="5">
+	<table id="topics_view">
 		<tr>
 			<th>Title</th>
 			<th>Author</th>
@@ -27,12 +27,11 @@
 		</tr>
 		{% endfor %}
 	</table>
+	<div class="right">
 	<table id="forum_view">
 		<tbody><tr>
 			<th>Forum name</th>
 			<th>Topic count</th>
-			<th>Post count</th>
-			<th>Last Post</th>
 		</tr>
 		{% for f in forums %}
 		<tr>
@@ -41,13 +40,12 @@
 				<p>{{ f.description }}</p>
 			</td>
 			<td>{{ f.topic_count }}</td>
-			<td>{{ f.post_count }}</td>
-			<td>{% if f.last_post %}<a href="{{ f.last_post.get_absolute_url }}" title="Topic &quot;{{ f.last_post.topic }}&quot;">{{ f.last_post.created_at|user_date:user }}</a> by {{ f.last_post.author }}{% else %}-{% endif %}</td>
 		</tr>
 		{% empty %}
 			<td colspan="4">No forums. :-(</td>
 		{% endfor %}
 	</tbody></table>
+	</div>
 {% endblock content %}
 {% block after_content %}
 	<div id="forum_stats">

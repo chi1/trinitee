@@ -48,7 +48,7 @@ option.button {
 
 #page {
 	background: #fff;
-	width: 80%;
+	width: 900px;
 	margin: 0 auto 50px;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -270,6 +270,24 @@ ul.messages .error   { background: #c54d47; }
 
 .box dd {
 	color: #4f4f4f;
+}
+
+/****************
+ * Forum
+ ****************/
+
+#topics_view {
+	float:left;
+	width:710px;
+}
+
+#forum_view {
+	float:right;
+	width:150px;
+}
+
+#singleforum {
+	width:100%;
 }
 
 /****************
