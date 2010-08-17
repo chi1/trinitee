@@ -5,6 +5,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.shortcuts import render_to_response, HttpResponseRedirect
 from django.template import RequestContext
 from django.utils.safestring import mark_safe
+from utilities.objtrack.models import ObjectTracker
 
 register = template.Library()
 
@@ -92,6 +93,13 @@ def can_post_reply(user, forum):
 		return False
 	return True
 
+@register.filter
+def get_first_unread_post(topic, request):
+	tracker = ObjectTracker(request.session)
+	for post in topic.posts.all():
+		if not tracker.has_viewed(post, 'created_at'):
+			return post
+	return None
 
 @register.filter
 def current_karma(post, user):

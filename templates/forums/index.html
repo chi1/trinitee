@@ -6,27 +6,26 @@
 	<link rel="alternate" type="application/atom+xml" href="{% url feed_forums_index %}" title="{{ settings.SITE_NAME }} Forum" />
 {% endblock header %}
 {% block content %}
-	<table id="topics_view">
-		<tr>
-			<th>Title</th>
-			<th>Author</th>
-			<th>Replies</th>
-			<th>Views</th>
-			<th>Last post</th>
-		</tr>
+	<div id="topics_view">
 		{% for t in topics %}
-		<tr>
-			{% url forums.views.topic_view t.id as topic_url %}
-			<td>{% if t.has_new_posts %}<b>[UNREAD]</b> {% endif %}{% if t.is_sticky %}<b>[STICKY]</b> {% endif %}{% if t.is_closed %}<b>[CLOSED]</b> {% endif %}<a href="{{ topic_url }}">{{ t.title }}</a> {{ t|topic_pagination:settings.POSTS_PER_PAGE }}</td>
-			<td>{{ t.author }}</td>
-			<td>{{ t.post_count|add:"-1" }}{# nice hack #}</td>
-			<td>{{ t.view_count }}</td>
-			<td><a href="{{ t.last_post.get_absolute_url }}">{{ t.last_post.created_at|user_date:user }}</a> by {{ t.last_post.author }}</td>
+			<div class="topictitle left">{% url forums.views.topic_view t.id as topic_url %}{% with t|get_first_unread_post:request as first_unread %}{% if first_unread %}<a class="topictitle" href="{{ first_unread.get_absolute_url }}"><b>[UNREAD]</b></a>{% endif %}{% endwith %}{% if t.is_sticky %}<b>[STICKY]</b> {% endif %}{% if t.is_closed %}<b>[CLOSED]</b> {% endif %} {{ t|topic_pagination:settings.POSTS_PER_PAGE }}<a class="topictitle" href="{{ topic_url }}">{{ t.title }}</a><br />
+			<span class="topicmeta">Senaste: <a href="{{ t.last_post.get_absolute_url }}">{{ t.last_post.created_at|user_date:user }}</a> av {{ t.last_post.author }}</span>
+			</div>
+			<table class="topiccounts right">
+				<tbody><tr>
+					<th>Svar</th>
+					<th>Visningar</th>
+				</tr>
+				<tr>
+					<td>{{ t.post_count|add:"-1" }}{# nice hack #} </td>
+					<td>{{ t.view_count }}</td>
+				</tr>
+			</tbody></table>
 		{% empty %}
-			<td colspan="4">No topics in this forum.</td>
-		</tr>
+			<p>No topics in this forum.</p>
+		</div>
 		{% endfor %}
-	</table>
+	</div>
 	<div class="right">
 	<table id="forum_view">
 		<tbody><tr>

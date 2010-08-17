@@ -273,12 +273,19 @@ ul.messages .error   { background: #c54d47; }
 }
 
 /****************
- * Forum
+ * Forum Index
  ****************/
 
 #topics_view {
 	float:left;
-	width:710px;
+	width:690px;
+	margin:10px;
+}
+
+#singleforum {
+	width:100%;
+	margin:10px;
+	overflow:auto;
 }
 
 #forum_view {
@@ -288,6 +295,31 @@ ul.messages .error   { background: #c54d47; }
 
 #singleforum {
 	width:100%;
+}
+
+div.topictitle {
+	clear:both;
+	font-size:0.8em;
+}
+
+a.topictitle {
+	font-size:1.4em;
+}
+
+.topiccounts {
+	margin:0px;
+	display:inline;
+	text-align:center;
+	font-size:1.3em;
+}
+
+.topiccounts td {
+	padding:0px 5px 0px 5px;
+}
+
+.topiccounts th {
+	font-size:0.6em;
+	font-weight:normal;
 }
 
 /****************
